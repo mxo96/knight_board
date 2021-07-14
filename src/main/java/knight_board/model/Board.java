@@ -10,8 +10,7 @@ public class Board {
     private int height;
     private List<Coordinates> obstacles;
 
-    public Board() {
-    }
+    private Board(){}
 
     public Board(final int width, final int height, final List<Coordinates> obstacles) {
         this.width = width;

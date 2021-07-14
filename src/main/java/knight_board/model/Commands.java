@@ -8,8 +8,7 @@ import com.google.common.base.Objects;
 public class Commands {
     private List<String> commands;
 
-    public Commands() {
-    }
+    private Commands(){}
 
     public Commands(final List<String> commands) {
         this.commands = commands;

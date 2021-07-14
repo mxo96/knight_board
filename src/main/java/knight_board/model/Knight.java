@@ -34,21 +34,6 @@ public class Knight {
         this.direction = direction;
     }
 
-    //TODO check use streams
-    private void validateStartPosition(final Coordinates knightCoordinates, final Board board) throws KnightInitializationException {
-        if (knightCoordinates.getX() < 0 || knightCoordinates.getY() < 0) {
-            throw new KnightInitializationException(format("Invalid Knight start position out of board[xKnight=%s, yKnight=%s]", knightCoordinates.getX(), knightCoordinates.getY()));
-        } else if (knightCoordinates.getX() > board.getWidth()) {
-            throw new KnightInitializationException(format("Invalid Knight start position out of board[xKnight=%s, widthBoard=%s]", knightCoordinates.getX(), board.getWidth()));
-        } else if (knightCoordinates.getY() > board.getHeight()) {
-            throw new KnightInitializationException(format("Invalid Knight start position out of board[yKnight=%s, heightBoard=%s]", knightCoordinates.getY(), board.getHeight()));
-        }
-        for (final Coordinates obstacleCoordinates : board.getObstacles())
-            if (knightCoordinates.equals(obstacleCoordinates)) {
-                throw new KnightInitializationException(format("Invalid Knight start position overlaps with obstacles[knightCoordinates=%s, obstacleCoordinates=%s]", knightCoordinates, obstacleCoordinates));
-            }
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -70,63 +55,83 @@ public class Knight {
                 .toString();
     }
 
-    public void move(final int moveSpaceValue, final Board board) throws OutOfBoardException {
-        boolean obstacleFound = false;
-        for (int i = 1; i <= moveSpaceValue; i++) {
-            if (this.direction == Direction.NORTH) {
-                for (final Coordinates obstacleCoordinates : board.getObstacles()) {
-                    if (this.coordinates.getX() == obstacleCoordinates.getX() && (this.getCoordinates().getY() + 1) == obstacleCoordinates.getY()) {
-                        obstacleFound = true;
-                        i = moveSpaceValue + 1;
-                        break;
-                    } else if (this.getCoordinates().getY() + 1 > board.getHeight()) {
-                        throw new OutOfBoardException("uscito dalla board");
-                    }
-                }
-                if (!obstacleFound) {
-                    this.setCoordinates(new Coordinates(this.getCoordinates().getX(), this.getCoordinates().getY() + 1));
-                }
-            } else if (this.direction == Direction.SOUTH) {
-                for (final Coordinates obstacleCoordinates : board.getObstacles()) {
-                    if (this.coordinates.getX() == obstacleCoordinates.getX() && (this.getCoordinates().getY() - 1) == obstacleCoordinates.getY()) {
-                        obstacleFound = true;
-                        i = moveSpaceValue + 1;
-                        break;
-                    } else if (this.getCoordinates().getY() - 1 < 0) {
-                        throw new OutOfBoardException("uscito dalla board");
-                    }
-                }
-                if (!obstacleFound) {
-                    this.setCoordinates(new Coordinates(this.getCoordinates().getX(), this.getCoordinates().getY() - 1));
-                }
-            } else if (this.direction == Direction.EAST) {
-                for (final Coordinates obstacleCoordinates : board.getObstacles()) {
-                    if (this.coordinates.getY() == obstacleCoordinates.getY() && (this.getCoordinates().getX() + 1) == obstacleCoordinates.getX()) {
-                        obstacleFound = true;
-                        i = moveSpaceValue + 1;
-                        break;
-                    } else if (this.getCoordinates().getX() + 1 > board.getWidth()) {
-                        throw new OutOfBoardException("uscito dalla board");
-                    }
-                }
-                if (!obstacleFound) {
-                    this.setCoordinates(new Coordinates(this.getCoordinates().getX() + 1, this.getCoordinates().getY()));
-                }
-            } else if (this.direction == Direction.WEST) {
-                for (final Coordinates obstacleCoordinates : board.getObstacles()) {
-                    if (this.coordinates.getY() == obstacleCoordinates.getY() && (this.getCoordinates().getX() - 1) == obstacleCoordinates.getX()) {
-                        obstacleFound = true;
-                        i = moveSpaceValue + 1;
-                        break;
-                    } else if (this.getCoordinates().getX() - 1 < 0) {
-                        throw new OutOfBoardException("uscito dalla board");
-                    }
-
-                }
-                if (!obstacleFound) {
-                    this.setCoordinates(new Coordinates(this.getCoordinates().getX() - 1, this.getCoordinates().getY()));
-                }
+    //TODO check use streams
+    private void validateStartPosition(final Coordinates knightCoordinates, final Board board) throws KnightInitializationException {
+        if (knightCoordinates.getX() < 0 || knightCoordinates.getY() < 0) {
+            throw new KnightInitializationException(format("Invalid Knight start position out of board[xKnight=%s, yKnight=%s]", knightCoordinates.getX(), knightCoordinates.getY()));
+        } else if (knightCoordinates.getX() > board.getWidth()) {
+            throw new KnightInitializationException(format("Invalid Knight start position out of board[xKnight=%s, widthBoard=%s]", knightCoordinates.getX(), board.getWidth()));
+        } else if (knightCoordinates.getY() > board.getHeight()) {
+            throw new KnightInitializationException(format("Invalid Knight start position out of board[yKnight=%s, heightBoard=%s]", knightCoordinates.getY(), board.getHeight()));
+        }
+        for (final Coordinates obstacleCoordinates : board.getObstacles())
+            if (knightCoordinates.equals(obstacleCoordinates)) {
+                throw new KnightInitializationException(format("Invalid Knight start position overlaps with obstacles[knightCoordinates=%s, obstacleCoordinates=%s]", knightCoordinates, obstacleCoordinates));
             }
+    }
+
+    public void move(final int moveSpaceValue, final Board board) throws OutOfBoardException {
+        for (int i = 1; i <= moveSpaceValue; i++) {
+            final Coordinates newKnightCoordinates = new Coordinates();
+            switch (getDirection()){
+                case NORTH:
+                    newKnightCoordinates.setX(getCoordinates().getX());
+                    newKnightCoordinates.setY(getCoordinates().getY() + 1);
+                    break;
+                case SOUTH:
+                    newKnightCoordinates.setX(getCoordinates().getX());
+                    newKnightCoordinates.setY(getCoordinates().getY() - 1);
+                    break;
+                case EAST:
+                    newKnightCoordinates.setX(getCoordinates().getX() + 1);
+                    newKnightCoordinates.setY(getCoordinates().getY());
+                    break;
+                case WEST:
+                    newKnightCoordinates.setX(getCoordinates().getX() - 1);
+                    newKnightCoordinates.setY(getCoordinates().getY());
+                    break;
+            }
+            if (canKnightMove(newKnightCoordinates, board)) {
+                this.setCoordinates(newKnightCoordinates);
+            }
+
+        }
+    }
+
+    private boolean canKnightMove(final Coordinates newKnightCoordinates, final Board board) throws OutOfBoardException {
+        boolean moveAllowed = true;
+        outOfBoardMoveValidation(newKnightCoordinates, board);
+        for (final Coordinates obstacleCoordinates : board.getObstacles()) {
+            if (newKnightCoordinates.equals(obstacleCoordinates)) {
+                moveAllowed = false;
+                break;
+            }
+        }
+        return moveAllowed;
+    }
+
+    private void outOfBoardMoveValidation(final Coordinates newKnightCoordinates, final Board board) throws OutOfBoardException {
+        switch(getDirection()){
+            case NORTH:
+                if (newKnightCoordinates.getY() > board.getHeight()) {
+                    throw new OutOfBoardException(format("Knight out of the Board [direction=%s]", getDirection()));
+                }
+                break;
+            case SOUTH:
+                if (newKnightCoordinates.getY() < 0) {
+                    throw new OutOfBoardException(format("Knight out of the Board [direction=%s]", getDirection()));
+                }
+                break;
+            case EAST:
+                if (newKnightCoordinates.getX() > board.getWidth()) {
+                    throw new OutOfBoardException(format("Knight out of the Board [direction=%s]", getDirection()));
+                }
+                break;
+            case WEST:
+                if (newKnightCoordinates.getX() < 0) {
+                    throw new OutOfBoardException(format("Knight out of the Board [direction=%s]", getDirection()));
+                }
+                break;
         }
     }
 }

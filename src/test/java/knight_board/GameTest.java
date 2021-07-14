@@ -1,5 +1,6 @@
 package knight_board;
 
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
@@ -9,6 +10,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,7 +62,7 @@ public class GameTest {
 
     @Test
     public void shouldPrintOutputStatusAsGenericErrorThrowingCommandsException() throws JsonProcessingException {
-        when(gameservice.boardDefinition()).thenReturn(new Board());
+        when(gameservice.boardDefinition()).thenReturn(new Board(0, 0, emptyList()));
         when(gameservice.commands()).thenThrow(new CommandsException("I fire for test"));
         game.start();
 
@@ -69,7 +71,7 @@ public class GameTest {
 
     @Test
     public void shouldPrintOutputStatusAsInvalidStartPositionThrowingKnightInitializationException() throws Exception {
-        when(gameservice.boardDefinition()).thenReturn(new Board());
+        when(gameservice.boardDefinition()).thenReturn(new Board(0, 0, emptyList()));
         when(gameservice.commands()).thenReturn(new Commands(Collections.singletonList("START -1,-2,NORTH")));
         whenNew(Knight.class).withArguments(any(Coordinates.class),
                 any(Direction.class),
