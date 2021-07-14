@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import knight_board.exceptions.BoardDefinitionException;
-import knight_board.exceptions.CommandsException;
+import knight_board.exceptions.CommandsApiException;
 import knight_board.model.Board;
 import knight_board.model.Commands;
 
@@ -47,7 +47,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Commands commands() throws CommandsException {
+    public Commands commands() throws CommandsApiException {
         try {
             final URL url = new URL(COMMANDS_API);
             final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -56,15 +56,15 @@ public class GameServiceImpl implements GameService {
 
             return mapper.readValue(responseStream, Commands.class);
         } catch (final SocketTimeoutException e) {
-            throw new CommandsException(format("There was a timeout with the Commands API [commandsApi=%s]", COMMANDS_API), e);
+            throw new CommandsApiException(format("There was a timeout with the Commands API [commandsApi=%s]", COMMANDS_API), e);
         } catch (JsonParseException e) {
-            throw new CommandsException(format("There was a problem with json parsing for the Commands API response [commandsApi=%s]", COMMANDS_API), e);
+            throw new CommandsApiException(format("There was a problem with json parsing for the Commands API response [commandsApi=%s]", COMMANDS_API), e);
         } catch (MalformedURLException e) {
-            throw new CommandsException(format("There was a problem with the url of the Commands API [commandsApi=%s]", COMMANDS_API), e);
+            throw new CommandsApiException(format("There was a problem with the url of the Commands API [commandsApi=%s]", COMMANDS_API), e);
         } catch (JsonMappingException e) {
-            throw new CommandsException(format("There was a problem with json mapping for the Commands API response [commandsApi=%s]", COMMANDS_API), e);
+            throw new CommandsApiException(format("There was a problem with json mapping for the Commands API response [commandsApi=%s]", COMMANDS_API), e);
         } catch (IOException e) {
-            throw new CommandsException(format("There was a problem with the Commands API [commandsApi=%s]", COMMANDS_API), e);
+            throw new CommandsApiException(format("There was a problem with the Commands API [commandsApi=%s]", COMMANDS_API), e);
         }
     }
 }

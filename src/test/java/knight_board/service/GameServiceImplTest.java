@@ -21,7 +21,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import junit.framework.TestCase;
 import knight_board.exceptions.BoardDefinitionException;
-import knight_board.exceptions.CommandsException;
+import knight_board.exceptions.CommandsApiException;
 import knight_board.model.Board;
 import knight_board.model.Commands;
 import knight_board.model.Coordinates;
@@ -89,16 +89,16 @@ public class GameServiceImplTest extends TestCase {
         assertEquals(actualCommands, expectedCommands);
     }
 
-    @Test(expected = CommandsException.class)
-    public void shouldThrowCommandsExceptionGivenMalformedApiUrl() throws Exception {
+    @Test(expected = CommandsApiException.class)
+    public void shouldThrowCommandsApiExceptionGivenMalformedApiUrl() throws Exception {
         PowerMockito.mockStatic(System.class);
         when(System.getenv(anyString())).thenReturn("://url-without-protocol");
 
         sut.commands();
     }
 
-    @Test(expected = CommandsException.class)
-    public void shouldThrowCommandsExceptionGivenMalformedJson() throws Exception {
+    @Test(expected = CommandsApiException.class)
+    public void shouldThrowCommandsApiExceptionGivenMalformedJson() throws Exception {
         final ByteArrayInputStream mockedResponse = new ByteArrayInputStream("{\"commands\"[\"command\"]}".getBytes());
 
         whenNew(URL.class).withArguments(anyString()).thenReturn(url);
