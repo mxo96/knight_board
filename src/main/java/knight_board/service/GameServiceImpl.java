@@ -25,11 +25,12 @@ public class GameServiceImpl implements GameService {
         try {
             final URL url = new URL(BOARD_API);
             final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(5000);
             final InputStream responseStream = connection.getInputStream();
 
             return mapper.readValue(responseStream, Board.class);
         } catch (final Exception e) {
-            throw new BoardDefinitionException(format("There was a problem with the Board API [api=%s]", BOARD_API), e);
+            throw new BoardDefinitionException(format("There was a problem with the Board API [boardApi=%s]", BOARD_API), e);
         }
     }
 
@@ -39,11 +40,12 @@ public class GameServiceImpl implements GameService {
         try {
             final URL url = new URL(COMMANDS_API);
             final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(5000);
             final InputStream responseStream = connection.getInputStream();
 
             return mapper.readValue(responseStream, Commands.class);
         } catch (final Exception e) {
-            throw new CommandsException(format("There was a problem with the Commands API [api=%s]", COMMANDS_API), e);
+            throw new CommandsException(format("There was a problem with the Commands API [commandsApi=%s]", COMMANDS_API), e);
         }
     }
 }

@@ -1,5 +1,7 @@
 package knight_board;
 
+import org.apache.log4j.Logger;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -17,6 +19,8 @@ import knight_board.model.OutputStatus;
 import knight_board.service.GameService;
 
 public class Game {
+    private static final Logger LOGGER = Logger.getLogger(Game.class);
+
     private final ObjectMapper mapperOutput;
     private final GameService gameservice;
     private Output output;
@@ -51,6 +55,7 @@ public class Game {
             output = new Output(knight, OutputStatus.SUCCESS);
         } catch (final BoardDefinitionException | CommandsException e) {
             output = new Output(OutputStatus.GENERIC_ERROR);
+            LOGGER.error("Problem calling Board API", e);
         } catch (final KnightInitializationException e) {
             output = new Output(OutputStatus.INVALID_START_POSITION);
         } catch (final OutOfBoardException e) {
