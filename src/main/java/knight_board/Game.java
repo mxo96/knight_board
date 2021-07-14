@@ -52,14 +52,17 @@ public class Game {
                     knight.move(moveSpaceValue, board);
                 }
             }
+            LOGGER.debug("Knight arrived to destination");
             output = new Output(knight, OutputStatus.SUCCESS);
         } catch (final BoardDefinitionException | CommandsException e) {
             output = new Output(OutputStatus.GENERIC_ERROR);
             LOGGER.error("Problem calling Board API", e);
         } catch (final KnightInitializationException e) {
             output = new Output(OutputStatus.INVALID_START_POSITION);
+            LOGGER.error("Invalid start position", e);
         } catch (final OutOfBoardException e) {
             output = new Output(OutputStatus.OUT_OF_THE_BOARD);
+            LOGGER.error("Knight out of board", e);
         } finally {
             final String json = mapperOutput.writeValueAsString(output);
             System.out.println(json);
