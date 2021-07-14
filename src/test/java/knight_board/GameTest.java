@@ -4,13 +4,13 @@ import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,10 +24,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import knight_board.exceptions.BoardDefinitionException;
-import knight_board.exceptions.CommandsException;
+import knight_board.exceptions.CommandInitializationException;
+import knight_board.exceptions.CommandsApiException;
 import knight_board.exceptions.KnightInitializationException;
 import knight_board.exceptions.OutOfBoardException;
 import knight_board.model.Board;
+import knight_board.model.Command;
 import knight_board.model.Commands;
 import knight_board.model.Coordinates;
 import knight_board.model.Direction;
@@ -61,9 +63,9 @@ public class GameTest {
     }
 
     @Test
-    public void shouldPrintOutputStatusAsGenericErrorThrowingCommandsException() throws JsonProcessingException {
+    public void shouldPrintOutputStatusAsGenericErrorThrowingCommandsApiException() throws JsonProcessingException {
         when(gameservice.boardDefinition()).thenReturn(new Board(0, 0, emptyList()));
-        when(gameservice.commands()).thenThrow(new CommandsException("I fire for test"));
+        when(gameservice.commands()).thenThrow(new CommandsApiException("I fire for test"));
         game.start();
 
         assertEquals(game.getOutput(), new Output(OutputStatus.GENERIC_ERROR));
@@ -80,6 +82,17 @@ public class GameTest {
         game.start();
 
         assertEquals(game.getOutput(), new Output(OutputStatus.INVALID_START_POSITION));
+    }
+
+    @Test
+    public void shouldPrintOutputStatusAsGenericErrorThrowingCommandInitializationException() throws Exception {
+        when(gameservice.boardDefinition()).thenReturn(new Board(0, 0, emptyList()));
+        when(gameservice.commands()).thenReturn(new Commands(Collections.singletonList("START -1,-2,NORTH")));
+        whenNew(Command.class).withArguments(anyString()).thenThrow(new CommandInitializationException("I fire for test"));
+
+        game.start();
+
+        assertEquals(game.getOutput(), new Output(OutputStatus.GENERIC_ERROR));
     }
 
     @Test
