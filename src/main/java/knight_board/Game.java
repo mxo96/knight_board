@@ -1,5 +1,7 @@
 package knight_board;
 
+import static java.lang.String.format;
+
 import org.apache.log4j.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,6 +37,10 @@ public class Game {
         try {
             final Board board = gameservice.boardDefinition();
             final Commands commands = gameservice.commands();
+
+            if(!commands.getCommands().get(0).startsWith("START")){
+                throw new KnightInitializationException(format("Knight cannot be initialized without a first START command [firstCommand=%s]", commands.getCommands().get(0)));
+            }
 
             for (final String command : commands.getCommands()) {
                 final Command commandObj = Command.of(command);

@@ -96,7 +96,6 @@ public class Knight {
             if (canKnightMove(newKnightCoordinates, board)) {
                 this.setCoordinates(newKnightCoordinates);
             }
-
         }
     }
 
