@@ -78,6 +78,16 @@ public class GameTest {
     }
 
     @Test
+    public void shouldPrintOutputStatusAsInvalidStartPositionThrowingKnightInitializationExceptionGivenFirstCommandDifferentFromStart() throws JsonProcessingException {
+        when(gameservice.boardDefinition()).thenReturn(new Board(0, 0, emptyList()));
+        when(gameservice.commands()).thenReturn(new Commands(Collections.singletonList("ROTATE NORTH")));
+
+        game.start();
+
+        assertEquals(game.getOutput(), new Output(OutputStatus.INVALID_START_POSITION));
+    }
+
+    @Test
     public void shouldPrintOutputStatusAsInvalidStartPositionThrowingKnightInitializationException() throws Exception {
         when(gameservice.boardDefinition()).thenReturn(new Board(0, 0, emptyList()));
         when(gameservice.commands()).thenReturn(new Commands(Collections.singletonList("START -1,-2,NORTH")));
