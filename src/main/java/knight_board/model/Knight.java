@@ -55,7 +55,6 @@ public class Knight {
                 .toString();
     }
 
-    //TODO check use streams
     private void validateStartPosition(final Coordinates knightCoordinates, final Board board) throws KnightInitializationException {
         if (knightCoordinates.getX() < 0 || knightCoordinates.getY() < 0) {
             throw new KnightInitializationException(format("Invalid Knight start position out of board[xKnight=%s, yKnight=%s]", knightCoordinates.getX(), knightCoordinates.getY()));
@@ -64,10 +63,13 @@ public class Knight {
         } else if (knightCoordinates.getY() > board.getHeight()) {
             throw new KnightInitializationException(format("Invalid Knight start position out of board[yKnight=%s, heightBoard=%s]", knightCoordinates.getY(), board.getHeight()));
         }
-        for (final Coordinates obstacleCoordinates : board.getObstacles())
-            if (knightCoordinates.equals(obstacleCoordinates)) {
-                throw new KnightInitializationException(format("Invalid Knight start position overlaps with obstacles[knightCoordinates=%s, obstacleCoordinates=%s]", knightCoordinates, obstacleCoordinates));
-            }
+
+        final boolean obstacleFound = board.getObstacles()
+                .stream()
+                .anyMatch(knightCoordinates::equals);
+        if (obstacleFound) {
+            throw new KnightInitializationException(format("Invalid Knight start position overlaps with obstacles[knightCoordinates=%s]", knightCoordinates));
+        }
     }
 
     public void move(final int moveSpaceValue, final Board board) throws OutOfBoardException {
@@ -99,15 +101,11 @@ public class Knight {
     }
 
     private boolean canKnightMove(final Coordinates newKnightCoordinates, final Board board) throws OutOfBoardException {
-        boolean moveAllowed = true;
         outOfBoardMoveValidation(newKnightCoordinates, board);
-        for (final Coordinates obstacleCoordinates : board.getObstacles()) {
-            if (newKnightCoordinates.equals(obstacleCoordinates)) {
-                moveAllowed = false;
-                break;
-            }
-        }
-        return moveAllowed;
+
+        return board.getObstacles()
+                .stream()
+                .noneMatch(newKnightCoordinates::equals);
     }
 
     private void outOfBoardMoveValidation(final Coordinates newKnightCoordinates, final Board board) throws OutOfBoardException {

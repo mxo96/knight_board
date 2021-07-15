@@ -5,7 +5,9 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -121,13 +123,15 @@ public class GameTest {
         final Board testBoard = new Board(1, 1, Collections.singletonList(new Coordinates(1, 0)));
         final Knight mockKnight = Mockito.mock(Knight.class);
         when(gameservice.boardDefinition()).thenReturn(testBoard);
-        when(gameservice.commands()).thenReturn(new Commands(Arrays.asList("START 0,0,NORTH", "MOVE 7")));
+        when(gameservice.commands()).thenReturn(new Commands(Arrays.asList("START 1,1,NORTH", "ROTATE SOUTH", "MOVE 1")));
         whenNew(Knight.class).withArguments(any(Coordinates.class),
                 any(Direction.class),
                 any(Board.class)).thenReturn(mockKnight);
 
         game.start();
 
+        verify(mockKnight).setDirection(eq(Direction.SOUTH));
+        verify(mockKnight).move(anyInt(), eq(testBoard));
         assertEquals(game.getOutput(), new Output(mockKnight, OutputStatus.SUCCESS));
     }
 }
