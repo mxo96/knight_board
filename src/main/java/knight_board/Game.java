@@ -13,8 +13,6 @@ import knight_board.exceptions.OutOfBoardException;
 import knight_board.model.Board;
 import knight_board.model.Command;
 import knight_board.model.Commands;
-import knight_board.model.Coordinates;
-import knight_board.model.Direction;
 import knight_board.model.Knight;
 import knight_board.model.Output;
 import knight_board.model.OutputStatus;
