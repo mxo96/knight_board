@@ -59,6 +59,7 @@ public class GameTest {
     @Test
     public void shouldPrintOutputStatusAsGenericErrorThrowingBoardDefinitionException() throws JsonProcessingException {
         when(gameservice.boardDefinition()).thenThrow(new BoardDefinitionException("I fire for test"));
+
         game.start();
 
         assertEquals(game.getOutput(), new Output(OutputStatus.GENERIC_ERROR));
@@ -68,6 +69,7 @@ public class GameTest {
     public void shouldPrintOutputStatusAsGenericErrorThrowingCommandsApiException() throws JsonProcessingException {
         when(gameservice.boardDefinition()).thenReturn(new Board(0, 0, emptyList()));
         when(gameservice.commands()).thenThrow(new CommandsApiException("I fire for test"));
+
         game.start();
 
         assertEquals(game.getOutput(), new Output(OutputStatus.GENERIC_ERROR));

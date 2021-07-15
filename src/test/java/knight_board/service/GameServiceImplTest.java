@@ -6,11 +6,13 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -38,12 +40,16 @@ public class GameServiceImplTest extends TestCase {
     @InjectMocks
     private GameServiceImpl sut;
 
+    @Before
+    public void setUp() throws IOException {
+        when(url.openConnection()).thenReturn(connection);
+    }
+
     @Test
     public void shouldReturnABoard() throws Exception {
         final ByteArrayInputStream mockedResponse = new ByteArrayInputStream("{\"width\":1,\"height\":1,\"obstacles\":[{\"x\":0,\"y\":1}]}".getBytes());
 
         whenNew(URL.class).withArguments(anyString()).thenReturn(url);
-        when(url.openConnection()).thenReturn(connection);
         when(connection.getInputStream()).thenReturn(mockedResponse);
 
         final Board board = sut.boardDefinition();
@@ -55,7 +61,7 @@ public class GameServiceImplTest extends TestCase {
     }
 
     @Test(expected = BoardDefinitionException.class)
-    public void shouldThrowBoardDefinitionExceptionGivenMalformedApiUrl() throws Exception {
+    public void shouldThrowBoardDefinitionExceptionGivenMalformedApiUrl() {
         PowerMockito.mockStatic(System.class);
         when(System.getenv(anyString())).thenReturn("://url-without-protocol");
 
@@ -67,7 +73,6 @@ public class GameServiceImplTest extends TestCase {
         final ByteArrayInputStream mockedResponse = new ByteArrayInputStream("{\"width\"1}".getBytes());
 
         whenNew(URL.class).withArguments(anyString()).thenReturn(url);
-        when(url.openConnection()).thenReturn(connection);
         when(connection.getInputStream()).thenReturn(mockedResponse);
 
         sut.boardDefinition();
@@ -78,7 +83,6 @@ public class GameServiceImplTest extends TestCase {
         final ByteArrayInputStream mockedResponse = new ByteArrayInputStream("{\"commands\":[\"command\"]}".getBytes());
 
         whenNew(URL.class).withArguments(anyString()).thenReturn(url);
-        when(url.openConnection()).thenReturn(connection);
         when(connection.getInputStream()).thenReturn(mockedResponse);
 
         final Commands actualCommands = sut.commands();
@@ -102,7 +106,6 @@ public class GameServiceImplTest extends TestCase {
         final ByteArrayInputStream mockedResponse = new ByteArrayInputStream("{\"commands\"[\"command\"]}".getBytes());
 
         whenNew(URL.class).withArguments(anyString()).thenReturn(url);
-        when(url.openConnection()).thenReturn(connection);
         when(connection.getInputStream()).thenReturn(mockedResponse);
 
         sut.commands();

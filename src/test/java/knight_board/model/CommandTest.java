@@ -11,6 +11,7 @@ public class CommandTest {
     @Test
     public void shouldInitializeCommandAsStartType() throws CommandInitializationException {
         final Command command = Command.of("START 1,2,NORTH");
+
         assertEquals(CommandType.START, command.getType());
         assertEquals(new Coordinates(1,2), command.getCoordinates());
         assertEquals(Direction.NORTH, command.getDirection());
@@ -20,6 +21,7 @@ public class CommandTest {
     @Test
     public void shouldInitializeCommandAsRotateType() throws CommandInitializationException {
         final Command command = Command.of("ROTATE NORTH");
+
         assertEquals(CommandType.ROTATE, command.getType());
         assertEquals(Direction.NORTH, command.getDirection());
     }
@@ -27,6 +29,7 @@ public class CommandTest {
     @Test
     public void shouldInitializeCommandAsMoveType() throws CommandInitializationException {
         final Command command = Command.of("MOVE 7");
+
         assertEquals(CommandType.MOVE, command.getType());
         assertEquals(7, command.getMoveSpace());
     }
