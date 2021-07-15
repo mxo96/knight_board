@@ -39,7 +39,7 @@ public class Game {
             final Commands commands = gameservice.commands();
 
             for (final String command : commands.getCommands()) {
-                final Command commandObj = new Command(command);
+                final Command commandObj = Command.of(command);
                 switch(commandObj.getType()){
                     case START:
                         knight = new Knight(commandObj.getCoordinates(), commandObj.getDirection(), board);
@@ -66,7 +66,7 @@ public class Game {
         } catch (final OutOfBoardException e) {
             output = new Output(OutputStatus.OUT_OF_THE_BOARD);
             LOGGER.error("Knight out of board", e);
-        } catch (CommandInitializationException e) {
+        } catch (final CommandInitializationException e) {
             output = new Output(OutputStatus.GENERIC_ERROR);
             LOGGER.error("Command received error", e);
         } finally {

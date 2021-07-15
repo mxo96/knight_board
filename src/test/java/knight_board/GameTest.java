@@ -12,11 +12,13 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.checkerframework.checker.units.qual.A;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -39,7 +41,7 @@ import knight_board.model.OutputStatus;
 import knight_board.service.GameService;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(Game.class)
+@PrepareForTest({Game.class, Command.class})
 public class GameTest {
 
     @Mock
@@ -88,7 +90,8 @@ public class GameTest {
     public void shouldPrintOutputStatusAsGenericErrorThrowingCommandInitializationException() throws Exception {
         when(gameservice.boardDefinition()).thenReturn(new Board(0, 0, emptyList()));
         when(gameservice.commands()).thenReturn(new Commands(Collections.singletonList("START -1,-2,NORTH")));
-        whenNew(Command.class).withArguments(anyString()).thenThrow(new CommandInitializationException("I fire for test"));
+        PowerMockito.mockStatic( Command.class );
+        when(Command.of(anyString())).thenThrow(new CommandInitializationException("I fire for test"));
 
         game.start();
 
@@ -104,7 +107,7 @@ public class GameTest {
         whenNew(Knight.class).withArguments(any(Coordinates.class),
                 any(Direction.class),
                 any(Board.class)).thenReturn(mockKnight);
-        doThrow(new OutOfBoardException("i fire for test")).when(mockKnight).move(anyInt(), any(Board.class));
+        doThrow(new OutOfBoardException("I fire for test")).when(mockKnight).move(anyInt(), any(Board.class));
 
         game.start();
 

@@ -15,7 +15,11 @@ public class Command {
 
     private Command(){}
 
-    public Command(String command) throws CommandInitializationException {
+    public static Command of(final String command) throws CommandInitializationException {
+        return new Command(command);
+    }
+
+    private Command(final String command) throws CommandInitializationException {
         try
         {
             if (command.startsWith("START")) {
@@ -35,10 +39,10 @@ public class Command {
             else {
                 throw new CommandInitializationException();
             }
+        } catch (CommandInitializationException e) {
+            throw new CommandInitializationException(format("Command not allowed (valid command: START x,y,Direction, ROTATE Direction, MOVE moveSpace) [command=%s]", command), e);
         } catch (IllegalArgumentException e) {
             throw new CommandInitializationException(format("IllegalArgument occurred parsing command [command=%s]", command), e);
-        } catch (CommandInitializationException e) {
-            throw new CommandInitializationException(format("Command not allowed (valid command: START, ROTATE, MOVE) [command=%s]", command), e);
         } catch (Exception e) {
             throw new CommandInitializationException(format("Problem occurred parsing command [command=%s]", command), e);
         }
