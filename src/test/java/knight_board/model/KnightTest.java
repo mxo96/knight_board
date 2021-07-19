@@ -23,7 +23,7 @@ public class KnightTest {
     @Test
     public void shouldInitializeKnight() throws KnightInitializationException {
         final List<Coordinates> obstacles = Arrays.asList(new Coordinates(0, 1), new Coordinates(2, 1));
-        final Board board = new Board(2, 2, obstacles);
+        final Board board = new Board(7, 7, obstacles);
         new Knight(coordinatesKnight, Direction.NORTH, board);
     }
 
@@ -58,7 +58,7 @@ public class KnightTest {
     @Test
     public void shouldMoveKnightToNorth() throws KnightInitializationException, OutOfBoardException {
         final List<Coordinates> obstacles = Arrays.asList(new Coordinates(0, 1), new Coordinates(0, 0));
-        final Board board = new Board(3, 3, obstacles);
+        final Board board = new Board(7, 7, obstacles);
         final Knight knight = new Knight(coordinatesKnight, Direction.NORTH, board);
         knight.move(1, board);
 
@@ -69,7 +69,7 @@ public class KnightTest {
     @Test
     public void shouldMoveKnightToNorthWhileItEncounterAnObstacle() throws KnightInitializationException, OutOfBoardException {
         final List<Coordinates> obstacles = Arrays.asList(new Coordinates(2, 4), new Coordinates(2, 0));
-        final Board board = new Board(4, 4, obstacles);
+        final Board board = new Board(7, 7, obstacles);
         final Knight knight = new Knight(coordinatesKnight, Direction.NORTH, board);
         knight.move(7, board);
 
@@ -129,7 +129,7 @@ public class KnightTest {
     @Test
     public void shouldMoveKnightToEastWhileItEncounterAnObstacle() throws KnightInitializationException, OutOfBoardException {
         final List<Coordinates> obstacles = Arrays.asList(new Coordinates(2, 4), new Coordinates(5, 2));
-        final Board board = new Board(5, 5, obstacles);
+        final Board board = new Board(7, 7, obstacles);
         final Knight knight = new Knight(coordinatesKnight, Direction.EAST, board);
         knight.move(7, board);
 

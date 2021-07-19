@@ -58,9 +58,9 @@ public class Knight {
     private void validateStartPosition(final Coordinates knightCoordinates, final Board board) throws KnightInitializationException {
         if (knightCoordinates.getX() < 0 || knightCoordinates.getY() < 0) {
             throw new KnightInitializationException(format("Invalid Knight start position out of board[xKnight=%s, yKnight=%s]", knightCoordinates.getX(), knightCoordinates.getY()));
-        } else if (knightCoordinates.getX() > board.getWidth()) {
+        } else if (knightCoordinates.getX() > board.getWidth() - 1) {
             throw new KnightInitializationException(format("Invalid Knight start position out of board[xKnight=%s, widthBoard=%s]", knightCoordinates.getX(), board.getWidth()));
-        } else if (knightCoordinates.getY() > board.getHeight()) {
+        } else if (knightCoordinates.getY() > board.getHeight() - 1) {
             throw new KnightInitializationException(format("Invalid Knight start position out of board[yKnight=%s, heightBoard=%s]", knightCoordinates.getY(), board.getHeight()));
         }
 
@@ -110,7 +110,7 @@ public class Knight {
     private void outOfBoardMoveValidation(final Coordinates newKnightCoordinates, final Board board) throws OutOfBoardException {
         switch(getDirection()){
             case NORTH:
-                if (newKnightCoordinates.getY() > board.getHeight()) {
+                if (newKnightCoordinates.getY() > board.getHeight() - 1) {
                     throw new OutOfBoardException(format("Knight out of the Board [direction=%s]", getDirection()));
                 }
                 break;
@@ -120,7 +120,7 @@ public class Knight {
                 }
                 break;
             case EAST:
-                if (newKnightCoordinates.getX() > board.getWidth()) {
+                if (newKnightCoordinates.getX() > board.getWidth() - 1) {
                     throw new OutOfBoardException(format("Knight out of the Board [direction=%s]", getDirection()));
                 }
                 break;
