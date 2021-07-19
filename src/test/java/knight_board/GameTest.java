@@ -69,7 +69,7 @@ public class GameTest {
 
     @Test
     public void shouldPrintOutputStatusAsGenericErrorThrowingCommandsApiException() throws JsonProcessingException {
-        when(gameservice.boardDefinition()).thenReturn(new Board(0, 0, emptyList()));
+        when(gameservice.boardDefinition()).thenReturn(new Board(1, 1, emptyList()));
         when(gameservice.commands()).thenThrow(new CommandsApiException("I fire for test"));
 
         game.start();
@@ -79,7 +79,7 @@ public class GameTest {
 
     @Test
     public void shouldPrintOutputStatusAsInvalidStartPositionThrowingKnightInitializationExceptionGivenFirstCommandDifferentFromStart() throws JsonProcessingException {
-        when(gameservice.boardDefinition()).thenReturn(new Board(0, 0, emptyList()));
+        when(gameservice.boardDefinition()).thenReturn(new Board(1, 1, emptyList()));
         when(gameservice.commands()).thenReturn(new Commands(Collections.singletonList("ROTATE NORTH")));
 
         game.start();
@@ -89,7 +89,7 @@ public class GameTest {
 
     @Test
     public void shouldPrintOutputStatusAsInvalidStartPositionThrowingKnightInitializationException() throws Exception {
-        when(gameservice.boardDefinition()).thenReturn(new Board(0, 0, emptyList()));
+        when(gameservice.boardDefinition()).thenReturn(new Board(1, 1, emptyList()));
         when(gameservice.commands()).thenReturn(new Commands(Collections.singletonList("START -1,-2,NORTH")));
         whenNew(Knight.class).withArguments(any(Coordinates.class),
                 any(Direction.class),
@@ -102,7 +102,7 @@ public class GameTest {
 
     @Test
     public void shouldPrintOutputStatusAsGenericErrorThrowingCommandInitializationException() throws Exception {
-        when(gameservice.boardDefinition()).thenReturn(new Board(0, 0, emptyList()));
+        when(gameservice.boardDefinition()).thenReturn(new Board(1, 1, emptyList()));
         when(gameservice.commands()).thenReturn(new Commands(Collections.singletonList("START -1,-2,NORTH")));
         PowerMockito.mockStatic( Command.class );
         when(Command.of(anyString())).thenThrow(new CommandInitializationException("I fire for test"));
@@ -114,7 +114,7 @@ public class GameTest {
 
     @Test
     public void shouldPrintOutputStatusAsOutOfTheBoardThrowingOutOfBoardException() throws Exception {
-        final Board testBoard = new Board(1, 1, Collections.singletonList(new Coordinates(1, 0)));
+        final Board testBoard = new Board(2, 2, Collections.singletonList(new Coordinates(1, 0)));
         final Knight mockKnight = Mockito.mock(Knight.class);
         when(gameservice.boardDefinition()).thenReturn(testBoard);
         when(gameservice.commands()).thenReturn(new Commands(Arrays.asList("START 0,0,NORTH", "MOVE 7")));
@@ -130,7 +130,7 @@ public class GameTest {
 
     @Test
     public void shouldPrintOutputStatusAsSuccess() throws Exception {
-        final Board testBoard = new Board(1, 1, Collections.singletonList(new Coordinates(1, 0)));
+        final Board testBoard = new Board(2, 2, Collections.singletonList(new Coordinates(1, 0)));
         final Knight mockKnight = Mockito.mock(Knight.class);
         when(gameservice.boardDefinition()).thenReturn(testBoard);
         when(gameservice.commands()).thenReturn(new Commands(Arrays.asList("START 1,1,NORTH", "ROTATE SOUTH", "MOVE 1")));
